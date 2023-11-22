@@ -6,14 +6,8 @@ import (
 	"strings"
 
 	"scrapp.com/mod/lib"
+	"scrapp.com/mod/types"
 )
-
-type Fund struct {
-	Code     string
-	Yield    string
-	Price    float64
-	MaxPrice float64
-}
 
 func main() {
 	//pegar lista de dados do IFIX do b3
@@ -21,7 +15,7 @@ func main() {
 	riskRatePorcentage := 2.5
 	descountTax := (taxaIpcaPorcentage + riskRatePorcentage) / 100 //0,0826
 	ifixList := lib.GetB3Ifixdata()
-	var data []Fund
+	var data []types.Fund
 	for _, ifix := range ifixList {
 		code := ifix.Code
 		//get dividend data from status invest
@@ -50,9 +44,17 @@ func main() {
 		if dif > 5 {
 			fmt.Println("dif", code, dvidendNumber, price, maxPrice, maxPrice-priceNumber)
 		}
-		fund := Fund{code, dvidend, priceNumber, maxPrice}
+		fund := types.Fund{code, dvidend, priceNumber, maxPrice}
 		data = append(data, fund)
 	}
+	filename := "funds.csv"
+	err := lib.CreateCSVFromFunds(data, filename)
+	if err != nil {
+		println("Error creating CSV:", err)
+		return
+	}
+
+	println("CSV file created successfully:", filename)
 	// Read the response body
 
 }
