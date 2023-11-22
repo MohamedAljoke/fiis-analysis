@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+
+	"scrapp.com/mod/lib"
 )
 
 type Fund struct {
@@ -18,12 +20,12 @@ func main() {
 	taxaIpcaPorcentage := 5.51
 	riskRatePorcentage := 2.5
 	descountTax := (taxaIpcaPorcentage + riskRatePorcentage) / 100 //0,0826
-	ifixList := L.GetB3Ifixdata()
+	ifixList := lib.GetB3Ifixdata()
 	var data []Fund
 	for _, ifix := range ifixList {
 		code := ifix.Code
 		//get dividend data from status invest
-		dvidend, price := L.getDividendByCode(code)
+		dvidend, price := lib.GetDividendByCode(code)
 
 		dvidend = strings.ReplaceAll(dvidend, "R$ ", "")
 		dvidend = strings.ReplaceAll(dvidend, ",", ".")
